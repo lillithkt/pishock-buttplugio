@@ -21,5 +21,6 @@ jobs:
       
       - name: Build
         run: pnpm build
-      - name: Test
-        run: pnpm test
+      # commented out as unit tests require a physical device
+      # - name: Test
+      #   run: pnpm test
