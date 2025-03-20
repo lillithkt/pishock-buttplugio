@@ -1,3 +1,4 @@
+import { flags } from "debugcommands";
 import { existsSync, readFileSync, writeFileSync } from "fs";
 import path from "path";
 
@@ -44,7 +45,7 @@ export default function editIntifaceConfig() {
           "version": { "major": 3, "minor": 0 },
           "user-configs": config
       }));
-        console.log("Config file created at", ConfigPath);
+        if (flags.debugLogs) console.log("Config file created at", ConfigPath);
         return;
     }
 
@@ -67,10 +68,10 @@ export default function editIntifaceConfig() {
         }
 
         writeFileSync(ConfigPath, JSON.stringify(currentConfig));
-        console.log("Config file updated at", ConfigPath);
+        if (flags.debugLogs)console.log("Config file updated at", ConfigPath);
 
     } catch {
         writeFileSync(ConfigPath, JSON.stringify(config));
-        console.log("Config file created at", ConfigPath);
+        if (flags.debugLogs)console.log("Config file created at", ConfigPath);
     }
 }

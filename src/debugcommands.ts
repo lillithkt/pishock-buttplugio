@@ -1,14 +1,20 @@
 import { createInterface } from "readline";
 import { GlobalPort, sendCommand, SerialCommandEnum } from "serial";
 import { SerialCommandOperate, SerialOperateEnum } from "serial/types/operate";
+export const flags = {
+    shouldSuppressConsole: false,
+    debugLogs: false
+}
 
 export default async function runDebugCommands() {
     if (process.argv.includes("--serial")) await serialDebug();
     if (process.argv.includes("--vibrate")) await vibrateDebug();
     if (process.argv.includes("--shock")) await shockDebug();
+    if (process.argv.includes("--debug")) flags.debugLogs = true;
 }
 
 function serialDebug() {
+    flags.shouldSuppressConsole = true;
     console.log("Opening SerialPort debug console...");
         // flush buffer to serial port on enter
         // print serial port output to console

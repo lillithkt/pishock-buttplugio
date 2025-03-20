@@ -1,6 +1,8 @@
 import * as esbuild from "esbuild";
+import { exec } from "pkg";
 
-esbuild.build({
+(async () => {
+await esbuild.build({
   entryPoints: ["src/index.ts"],
   bundle: true,
   outfile: "dist/index.js",
@@ -12,3 +14,10 @@ esbuild.build({
     ".node": "copy",
   },
 });
+
+if (process.argv.includes("--exe")) {
+  console.log("Packaging...");
+  await exec(["dist/index.js", "--target", "latest", "--output", "dist/PiShock-ButtplugIO.exe"])
+}
+console.log("Done!");
+})();
