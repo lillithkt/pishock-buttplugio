@@ -1,7 +1,7 @@
 {
-  "name": "template",
-  "description": "Starter template for lillith's projects",
-  "homepage": "https://github.com/lillithkt/template",
+  "name": "pishock-buttplugio",
+  "description": "PiShock for buttplug.io",
+  "homepage": "https://github.com/lillithkt/pishock-buttplugio",
   "main": "dist/index.js",
   "engines": {
     "node": ">=21.5.0"
