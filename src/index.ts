@@ -1,3 +1,5 @@
+import { connectButtplug } from "buttplug";
+import editIntifaceConfig from "buttplug/addconfig";
 import runDebugCommands from "debugcommands";
 import { findSerialPort, GlobalPort } from "serial";
 
@@ -13,6 +15,9 @@ import { findSerialPort, GlobalPort } from "serial";
     console.log("Found serial port:", GlobalPort.portName);
 
     runDebugCommands();
+
+    editIntifaceConfig();
+    connectButtplug();
 })();
 
 
