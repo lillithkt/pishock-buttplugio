@@ -2,7 +2,7 @@ version: "3.8"
 
 services:
   pishock-buttplugio:
-    image: ghcr.io/lillithkt/pishock-buttplugio:latest
+    build: .
     restart: unless-stopped
     stdin_open: true
     tty: true
