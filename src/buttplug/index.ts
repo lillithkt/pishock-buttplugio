@@ -5,7 +5,7 @@ import { SerialCommandEnum } from "serial/types";
 import { SerialOperateEnum } from "serial/types/operate";
 import WebSocket from "ws";
 
-const DEVICE_ADDRESS = "P1SH0CK";
+export const DEVICE_ADDRESS_PREFIX = "P1SH0CK";
 
 export function getInRange(value: number) {
   return config.min + (value / 100) * (config.max - config.min);
@@ -30,7 +30,7 @@ export function initPersistTimer() {
   setInterval(sendShock, 5000);
 }
 
-export function connectButtplug() {
+export function connectButtplugForShocker(shockerID: number) {
   const ws = new WebSocket(`ws://${config.buttplugIP}:54817`, {
     handshakeTimeout: 500,
   });
@@ -40,7 +40,7 @@ export function connectButtplug() {
     ws.send(
       JSON.stringify({
         identifier: "PiShock",
-        address: DEVICE_ADDRESS,
+        address: shockerID.toString(),
         version: 0,
       })
     );
@@ -53,10 +53,10 @@ export function connectButtplug() {
 
     if (packet.startsWith("DeviceType;")) {
       if (flags.debugLogs) console.log("Got Device Type Request");
-      ws.send(`Z:${DEVICE_ADDRESS}:10`);
+      ws.send(`Z:${DEVICE_ADDRESS_PREFIX}:10`);
     } else if (packet.startsWith("Vibrate:")) {
       if (flags.debugLogs) console.log(`Got Vibrate Request: ${packet}`);
-      if (!GlobalPort.info?.shockers[0]) {
+      if (!GlobalPort.info?.shockers.find((i) => i.id === shockerID)) {
         console.error("Got vibrate but no shockers connected!");
         return;
       }
@@ -71,6 +71,12 @@ export function connectButtplug() {
 
   ws.on("close", () => {
     console.log("Please restart intiface!");
-    setTimeout(connectButtplug, 5000);
+    setTimeout(() => connectButtplugForShocker(shockerID), 5000);
   });
+}
+
+export function connectButtplug() {
+  for (const shocker of GlobalPort.info!.shockers) {
+    connectButtplugForShocker(shocker.id);
+  }
 }

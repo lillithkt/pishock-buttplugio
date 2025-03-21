@@ -11,6 +11,7 @@ interface iConfig {
   wifiSSID: string | null;
   wifiPass: string | null;
   buttplugIP: string;
+  shockerNames: Record<number, string>;
 }
 
 function getConfigDir(): string {
@@ -40,6 +41,7 @@ class Config implements iConfig {
   public wifiSSID: string | null = null;
   public wifiPass: string | null = null;
   public buttplugIP: string = "127.0.0.1";
+  public shockerNames: Record<number, string> = {};
   constructor() {
     this.load();
   }
@@ -52,6 +54,7 @@ class Config implements iConfig {
       wifiSSID: this.wifiSSID,
       wifiPass: this.wifiPass,
       buttplugIP: this.buttplugIP,
+      shockerNames: this.shockerNames,
     };
   }
 
@@ -65,6 +68,7 @@ class Config implements iConfig {
         if (read.wifiSSID) this.wifiSSID = read.wifiSSID;
         if (read.wifiPass) this.wifiPass = read.wifiPass;
         if (read.buttplugIP) this.buttplugIP = read.buttplugIP;
+        if (read.shockerNames) this.shockerNames = read.shockerNames;
       }
     } catch (e) {
       console.error("Error loading config! Using defaults.", e);

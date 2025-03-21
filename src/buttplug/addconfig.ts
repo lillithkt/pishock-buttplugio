@@ -1,39 +1,39 @@
+import config from "config";
 import { flags } from "debugcommands";
 import { existsSync, readFileSync, writeFileSync } from "fs";
 import path from "path";
+import { GlobalPort } from "serial";
 
-const config = {
+const getIntifaceConfig = () => ({
   protocols: {
     lovense: {
       communication: [{ websocket: { name: "PiShock" } }],
       configurations: [],
     },
   },
-  devices: [
-    {
-      identifier: {
-        protocol: "lovense",
-        identifier: "Z",
-        address: "P1SH0CK",
-      },
-      config: {
-        name: "PiShock",
-        features: [
-          {
-            description: "",
-            "feature-type": "Vibrate",
-            actuator: {
-              "step-range": [0, 100],
-              "step-limit": [0, 100],
-              messages: ["ScalarCmd"],
-            },
-          },
-        ],
-        "user-config": { allow: false, deny: false, index: 0 },
-      },
+  devices: GlobalPort.info!.shockers.map((i) => ({
+    identifier: {
+      protocol: "lovense",
+      identifier: "Z",
+      address: i.id.toString(),
     },
-  ],
-};
+    config: {
+      name: `PiShock - ${config.shockerNames[i.id] || i.id}`,
+      features: [
+        {
+          description: "",
+          "feature-type": "Vibrate",
+          actuator: {
+            "step-range": [0, 100],
+            "step-limit": [0, 100],
+            messages: ["ScalarCmd"],
+          },
+        },
+      ],
+      "user-config": { allow: false, deny: false, index: 0 },
+    },
+  })),
+});
 
 export const getIntifaceConfigPath = () =>
   path.join(
@@ -45,6 +45,7 @@ export const getIntifaceConfigPath = () =>
   );
 export function getEditedIntifaceConfig(): string {
   const configPath = getIntifaceConfigPath();
+  const config = getIntifaceConfig();
   if (!existsSync(configPath)) {
     return JSON.stringify({
       version: { major: 3, minor: 0 },
@@ -54,7 +55,7 @@ export function getEditedIntifaceConfig(): string {
 
   try {
     const currentConfig: {
-      "user-configs": typeof config;
+      "user-configs": ReturnType<typeof getIntifaceConfig>;
     } = JSON.parse(readFileSync(configPath, "utf-8"));
 
     if (!currentConfig["user-configs"].protocols.lovense)
@@ -74,22 +75,24 @@ export function getEditedIntifaceConfig(): string {
       currentConfig["user-configs"].protocols.lovense.configurations = [];
     if (!currentConfig["user-configs"].devices)
       currentConfig["user-configs"].devices = [];
-    if (
-      !currentConfig["user-configs"].devices.find(
-        (d) =>
-          d.identifier.protocol === "lovense" &&
-          d.identifier.identifier === "Z" &&
-          d.identifier.address === "P1SH0CK"
-      )
-    ) {
-      currentConfig["user-configs"].devices.push(config.devices[0]);
-    } else {
-      currentConfig["user-configs"].devices.find(
-        (d) =>
-          d.identifier.protocol === "lovense" &&
-          d.identifier.identifier === "Z" &&
-          d.identifier.address === "P1SH0CK"
-      )!.config = config.devices[0].config;
+    for (const shocker of GlobalPort.info!.shockers) {
+      if (
+        !currentConfig["user-configs"].devices.find(
+          (d) =>
+            d.identifier.protocol === "lovense" &&
+            d.identifier.identifier === "Z" &&
+            d.identifier.address === shocker.id.toString()
+        )
+      ) {
+        currentConfig["user-configs"].devices.push(config.devices[0]);
+      } else {
+        currentConfig["user-configs"].devices.find(
+          (d) =>
+            d.identifier.protocol === "lovense" &&
+            d.identifier.identifier === "Z" &&
+            d.identifier.address === shocker.id.toString()
+        )!.config = config.devices[0].config;
+      }
     }
 
     return JSON.stringify(currentConfig);
