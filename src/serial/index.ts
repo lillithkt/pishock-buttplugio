@@ -78,7 +78,8 @@ function parseTermInfo() {
 export async function findSerialPort(): Promise<typeof GlobalPort | null> {
   const ports = await SerialPort.list();
   for (const port of ports) {
-    if (port.vendorId !== TARGET_VENDOR_ID) continue;
+    if (port.vendorId?.toLowerCase() !== TARGET_VENDOR_ID.toLowerCase())
+      continue;
 
     try {
       closeExistingConnections(port.path);
