@@ -50,10 +50,12 @@ export function connectButtplug() {
     }
   });
 
-  ws.on("error", (err) => console.error("WebSocket Error:", err));
+  ws.on("error", (err) => {
+    if (flags.debugLogs) console.error("WebSocket Error:", err);
+  });
 
   ws.on("close", () => {
-    console.log("Disconnected. Reconnecting in", 1000, "ms");
-    setTimeout(connectButtplug, 1000);
+    console.log("Please restart intiface!");
+    setTimeout(connectButtplug, 5000);
   });
 }

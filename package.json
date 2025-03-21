@@ -6,6 +6,7 @@
   "engines": {
     "node": ">=21.5.0"
   },
+  "bin": "dist/index.js",
   "packageManager": "pnpm@9.0.1",
   "scripts": {
     "build": "node build.mjs",
@@ -39,6 +40,10 @@
   },
   "pkg": {
     "scripts": "dist/**/*.js",
-    "assets": "node_modules/**/*.node"
+    "assets": "node_modules/**/*.node",
+    "targets": [
+      "latest"
+    ],
+    "output": "dist/PiShock-ButtplugIO.exe"
   }
 }
