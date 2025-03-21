@@ -35,30 +35,28 @@ const config = {
   ],
 };
 
-const ConfigPath = path.join(
-  process.env.APPDATA!,
-  "com.nonpolynomial",
-  "intiface_central",
-  "config",
-  "buttplug-user-device-config-v3.json"
-);
-export default function editIntifaceConfig() {
-  if (!existsSync(ConfigPath)) {
-    writeFileSync(
-      ConfigPath,
-      JSON.stringify({
-        version: { major: 3, minor: 0 },
-        "user-configs": config,
-      })
-    );
-    if (flags.debugLogs) console.log("Config file created at", ConfigPath);
-    return;
+export const getIntifaceConfigPath = () =>
+  path.join(
+    // process.env.APPDATA ||
+    "%appdata%",
+    "com.nonpolynomial",
+    "intiface_central",
+    "config",
+    "buttplug-user-device-config-v3.json"
+  );
+export function getEditedIntifaceConfig(): string {
+  const configPath = getIntifaceConfigPath();
+  if (!existsSync(configPath)) {
+    return JSON.stringify({
+      version: { major: 3, minor: 0 },
+      "user-configs": config,
+    });
   }
 
   try {
     const currentConfig: {
       "user-configs": typeof config;
-    } = JSON.parse(readFileSync(ConfigPath, "utf-8"));
+    } = JSON.parse(readFileSync(configPath, "utf-8"));
 
     if (!currentConfig["user-configs"].protocols.lovense)
       // @ts-expect-error fill in missing fields
@@ -95,10 +93,22 @@ export default function editIntifaceConfig() {
       )!.config = config.devices[0].config;
     }
 
-    writeFileSync(ConfigPath, JSON.stringify(currentConfig));
-    if (flags.debugLogs) console.log("Config file updated at", ConfigPath);
+    return JSON.stringify(currentConfig);
   } catch {
-    writeFileSync(ConfigPath, JSON.stringify(config));
-    if (flags.debugLogs) console.log("Config file created at", ConfigPath);
+    return JSON.stringify({
+      version: { major: 3, minor: 0 },
+      "user-configs": config,
+    });
   }
+}
+export default function editIntifaceConfig() {
+  const configPath = getIntifaceConfigPath();
+  const editedConfig = getEditedIntifaceConfig();
+  if (process.env.DOCKER === "true") {
+    console.log("Please write the following json file to " + configPath);
+    console.log(editedConfig);
+    return;
+  }
+  writeFileSync(configPath, editedConfig);
+  if (flags.debugLogs) console.log("Config file created at", configPath);
 }
