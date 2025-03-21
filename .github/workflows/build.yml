@@ -27,5 +27,5 @@ jobs:
       - name: Upload
         uses: actions/upload-artifact@v4
         with:
-          name: OsuZapZap.exe
+          name: PiShock-ButtplugIO.exe
           path: ./dist/PiShock-ButtplugIO.exe
