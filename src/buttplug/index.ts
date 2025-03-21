@@ -2,6 +2,7 @@ import config from "config";
 import { flags } from "debugcommands";
 import { GlobalPort, sendCommand } from "serial";
 import { SerialCommandEnum } from "serial/types";
+import { SerialOperateEnum } from "serial/types/operate";
 import WebSocket from "ws";
 
 const DEVICE_ADDRESS = "P1SH0CK";
@@ -13,13 +14,14 @@ export function getInRange(value: number) {
 let lastSentValue = 0;
 
 function sendShock() {
+  const level = getInRange(lastSentValue);
   sendCommand({
     cmd: SerialCommandEnum.OPERATE,
     value: {
       id: GlobalPort.info!.shockers[0].id.toString(),
       duration: 10000,
-      intensity: getInRange(lastSentValue),
-      op: config.type,
+      intensity: level,
+      op: level === 0 ? SerialOperateEnum.END : config.type,
     },
   });
 }
