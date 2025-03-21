@@ -6,5 +6,10 @@ services:
     restart: unless-stopped
     stdin_open: true
     tty: true
+    environment:
+      - UDEV=1
+    devices:
+      - /dev/ttyUSB0:/dev/ttyUSB0
     volumes:
       - ./data:/data
+    privileged: true

@@ -18,6 +18,11 @@ FROM node:22.13.1-alpine
 
 ENV NODE_ENV=production
 
+RUN apk add --no-cache eudev && \
+    mkdir -p /run/udev
+ENV UDEV=1
+
+
 WORKDIR /dist
 COPY --from=0 /src/dist/* ./
 COPY --from=0 /src/node_modules ./node_modules
