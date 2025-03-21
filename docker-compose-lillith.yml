@@ -1,0 +1,16 @@
+version: "3.8"
+
+services:
+  pishock-buttplugio:
+    image: ghcr.io/lillithkt/pishock-buttplugio:latest
+    restart: unless-stopped
+    stdin_open: true
+    tty: true
+    environment:
+      - UDEV=1
+    devices:
+      - /dev/ttyUSB0:/dev/ttyUSB0
+    volumes:
+      - /run/udev:/run/udev
+      - /servers/pishock-buttplugio:/data
+    privileged: true
