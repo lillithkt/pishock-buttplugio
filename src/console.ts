@@ -61,14 +61,14 @@ const commands: Record<string, (args: string[]) => void> = {
     sendCommand({ cmd: SerialCommandEnum.RESTART });
   },
 
-  bpurl: (args) => {
+  buttplugip: (args) => {
     if (!args.length)
       return console.log(
         "This command sets the buttplug.io url, for if you are running this on another device"
       );
-    config.buttplugUrl = args[0];
+    config.buttplugIP = args[0];
     config.save();
-    console.log("Buttplug.io url set to " + config.buttplugUrl);
+    console.log("Buttplug.io url set to " + config.buttplugIP);
   },
 } as const;
 

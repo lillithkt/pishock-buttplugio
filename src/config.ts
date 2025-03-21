@@ -10,7 +10,7 @@ interface iConfig {
   type: SerialOperateEnum;
   wifiSSID: string | null;
   wifiPass: string | null;
-  buttplugUrl: string;
+  buttplugIP: string;
 }
 
 function getConfigDir(): string {
@@ -39,7 +39,7 @@ class Config implements iConfig {
   public type: SerialOperateEnum = SerialOperateEnum.VIBRATE;
   public wifiSSID: string | null = null;
   public wifiPass: string | null = null;
-  public buttplugUrl: string = "ws://127.0.0.1:54817";
+  public buttplugIP: string = "127.0.0.1";
   constructor() {
     this.load();
   }
@@ -51,7 +51,7 @@ class Config implements iConfig {
       type: this.type,
       wifiSSID: this.wifiSSID,
       wifiPass: this.wifiPass,
-      buttplugUrl: this.buttplugUrl,
+      buttplugIP: this.buttplugIP,
     };
   }
 
@@ -64,7 +64,7 @@ class Config implements iConfig {
         if (read.type) this.type = read.type;
         if (read.wifiSSID) this.wifiSSID = read.wifiSSID;
         if (read.wifiPass) this.wifiPass = read.wifiPass;
-        if (read.buttplugUrl) this.buttplugUrl = read.buttplugUrl;
+        if (read.buttplugIP) this.buttplugIP = read.buttplugIP;
       }
     } catch (e) {
       console.error("Error loading config! Using defaults.", e);

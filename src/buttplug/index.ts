@@ -29,7 +29,9 @@ export function initPersistTimer() {
 }
 
 export function connectButtplug() {
-  const ws = new WebSocket(config.buttplugUrl, { handshakeTimeout: 500 });
+  const ws = new WebSocket(`ws://${config.buttplugIP}:54817`, {
+    handshakeTimeout: 500,
+  });
 
   ws.on("open", () => {
     if (flags.debugLogs) console.log("Connected");

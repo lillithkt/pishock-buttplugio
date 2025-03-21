@@ -11,5 +11,6 @@ services:
     devices:
       - /dev/ttyUSB0:/dev/ttyUSB0
     volumes:
+      - /run/udev:/run/udev
       - ./data:/data
     privileged: true
