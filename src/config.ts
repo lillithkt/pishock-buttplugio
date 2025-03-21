@@ -2,25 +2,44 @@ import { existsSync, mkdirSync, readFileSync, writeFileSync } from "fs";
 import path, { join } from "path";
 import { SerialOperateEnum } from "serial/types/operate";
 
+import os from "os";
+
 interface iConfig {
   min: number;
   max: number;
   type: SerialOperateEnum;
   wifiSSID: string | null;
   wifiPass: string | null;
+  buttplugUrl: string;
+}
+
+function getConfigDir(): string {
+  if (process.env.DOCKER === "true") {
+    return "/data/config.json";
+  }
+  if (process.platform === "win32") {
+    return path.resolve(
+      process.env.APPDATA!,
+      "PiShock-ButtplugIO",
+      "config.json"
+    );
+  }
+  return path.join(
+    os.homedir(),
+    ".config",
+    "PiShock-ButtplugIO",
+    "config.json"
+  );
 }
 
 class Config implements iConfig {
-  private path: string = path.resolve(
-    process.env.APPDATA!,
-    "Pishock-Buttplugio",
-    "config.json",
-  );
+  private path: string = getConfigDir();
   public min: number = 0;
   public max: number = 0;
   public type: SerialOperateEnum = SerialOperateEnum.VIBRATE;
   public wifiSSID: string | null = null;
   public wifiPass: string | null = null;
+  public buttplugUrl: string = "ws://127.0.0.1:54817";
   constructor() {
     this.load();
   }
@@ -32,6 +51,7 @@ class Config implements iConfig {
       type: this.type,
       wifiSSID: this.wifiSSID,
       wifiPass: this.wifiPass,
+      buttplugUrl: this.buttplugUrl,
     };
   }
 
@@ -44,6 +64,7 @@ class Config implements iConfig {
         if (read.type) this.type = read.type;
         if (read.wifiSSID) this.wifiSSID = read.wifiSSID;
         if (read.wifiPass) this.wifiPass = read.wifiPass;
+        if (read.buttplugUrl) this.buttplugUrl = read.buttplugUrl;
       }
     } catch (e) {
       console.error("Error loading config! Using defaults.", e);

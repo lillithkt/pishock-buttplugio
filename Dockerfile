@@ -20,5 +20,7 @@ ENV NODE_ENV=production
 
 WORKDIR /dist
 COPY --from=0 /src/dist/* ./
+VOLUME [ "/data" ]
+ENV DOCKER=true
 
 CMD ["node", "."]

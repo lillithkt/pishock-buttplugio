@@ -5,7 +5,6 @@ import { SerialCommandEnum } from "serial/types";
 import WebSocket from "ws";
 
 const DEVICE_ADDRESS = "P1SH0CK";
-const WS_URL = "ws://127.0.0.1:54817";
 
 export function getInRange(value: number) {
   return config.min + (value / 100) * (config.max - config.min);
@@ -30,7 +29,7 @@ export function initPersistTimer() {
 }
 
 export function connectButtplug() {
-  const ws = new WebSocket(WS_URL, { handshakeTimeout: 500 });
+  const ws = new WebSocket(config.buttplugUrl, { handshakeTimeout: 500 });
 
   ws.on("open", () => {
     if (flags.debugLogs) console.log("Connected");

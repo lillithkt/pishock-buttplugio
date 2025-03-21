@@ -60,6 +60,16 @@ const commands: Record<string, (args: string[]) => void> = {
     console.log("Restarting PiShock...");
     sendCommand({ cmd: SerialCommandEnum.RESTART });
   },
+
+  bpurl: (args) => {
+    if (!args.length)
+      return console.log(
+        "This command sets the buttplug.io url, for if you are running this on another device"
+      );
+    config.buttplugUrl = args[0];
+    config.save();
+    console.log("Buttplug.io url set to " + config.buttplugUrl);
+  },
 } as const;
 
 export default function runConsole() {

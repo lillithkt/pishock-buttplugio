@@ -1,0 +1,10 @@
+version: "3.8"
+
+services:
+  pishock-buttplugio:
+    image: ghcr.io/lillithkt/pishock-buttplugio:latest
+    restart: unless-stopped
+    stdin_open: true
+    tty: true
+    volumes:
+      - ./data:/data
