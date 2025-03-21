@@ -10,6 +10,25 @@ const WS_URL = "ws://127.0.0.1:54817";
 export function getInRange(value: number) {
   return config.min + (value / 100) * (config.max - config.min);
 }
+
+let lastSentValue = 0;
+
+function sendShock() {
+  sendCommand({
+    cmd: SerialCommandEnum.OPERATE,
+    value: {
+      id: GlobalPort.info!.shockers[0].id.toString(),
+      duration: 10000,
+      intensity: getInRange(lastSentValue),
+      op: config.type,
+    },
+  });
+}
+
+export function initPersistTimer() {
+  setInterval(sendShock, 5000);
+}
+
 export function connectButtplug() {
   const ws = new WebSocket(WS_URL, { handshakeTimeout: 500 });
 
@@ -38,15 +57,8 @@ export function connectButtplug() {
         console.error("Got vibrate but no shockers connected!");
         return;
       }
-      sendCommand({
-        cmd: SerialCommandEnum.OPERATE,
-        value: {
-          id: GlobalPort.info?.shockers[0].id.toString(),
-          duration: 10000,
-          intensity: getInRange(Number(packet.match(/\d+/))),
-          op: config.type,
-        },
-      });
+      lastSentValue = Number(packet.match(/\d+/));
+      sendShock();
     }
   });
 

@@ -1,4 +1,4 @@
-import { connectButtplug } from "buttplug";
+import { connectButtplug, initPersistTimer } from "buttplug";
 import editIntifaceConfig from "buttplug/addconfig";
 import runDebugCommands, { flags } from "debugcommands";
 import { findSerialPort, GlobalPort, sendCommand } from "serial";
@@ -26,4 +26,6 @@ import runConsole from "./console";
 
   editIntifaceConfig();
   connectButtplug();
+
+  initPersistTimer();
 })();
