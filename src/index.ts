@@ -1,11 +1,12 @@
 import { connectButtplug, initPersistTimer } from "buttplug";
 import editIntifaceConfig from "buttplug/addconfig";
-import runDebugCommands, { flags } from "debugcommands";
+import runDebugCommands, { flags, runFirstDebugCommands } from "debugcommands";
 import { findSerialPort, GlobalPort, sendCommand } from "serial";
 import { SerialCommandEnum } from "serial/types";
 import runConsole from "./console";
 
 (async () => {
+  runFirstDebugCommands();
   if (flags.debugLogs) console.log("Finding serial port...");
   while (!GlobalPort.port) {
     try {

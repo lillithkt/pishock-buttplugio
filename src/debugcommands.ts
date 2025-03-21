@@ -9,14 +9,17 @@ export const flags = {
   debugLogs: false,
 };
 
-export default async function runDebugCommands() {
+export async function runFirstDebugCommands() {
   if (process.argv.includes("-h") || process.argv.includes("--help"))
     sendHelpCommand();
+  if (process.argv.includes("--debug")) flags.debugLogs = true;
+}
+
+export default async function runDebugCommands() {
   if (process.argv.includes("--serial")) await serialDebug(true);
   if (process.argv.includes("--seriallogs")) await serialDebug(false);
   if (process.argv.includes("--vibrate")) await vibrateDebug();
   if (process.argv.includes("--shock")) await shockDebug();
-  if (process.argv.includes("--debug")) flags.debugLogs = true;
 }
 
 function sendHelpCommand() {
