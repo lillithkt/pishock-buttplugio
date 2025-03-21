@@ -1,25 +1,31 @@
 export default interface iTerminalInfo {
-    version: string;
+  version: string;
+  type: number;
+  connected: boolean;
+  wifi: string;
+  server: string;
+  macaddress: string;
+  shockers: {
+    id: number;
     type: number;
-    connected: boolean;
-    wifi: string;
-    server: string;
-    macaddress: string;
-    shockers: {
-        id: number;
-        type: number;
-        paused: boolean;
-    }[];
-    networks: {
-        ssig: string;
-        password: string;
-    }[];
-    claimed: boolean;
-    isDev: boolean;
-    publisher: boolean;
-    polled: boolean;
-    subscriber: boolean;
-    publicIp: string;
-    internet: boolean;
-    ownerId: number;
+    paused: boolean;
+  }[];
+  networks: {
+    ssid: string;
+    password: string;
+  }[];
+  claimed: boolean;
+  isDev: boolean;
+  publisher: boolean;
+  polled: boolean;
+  subscriber: boolean;
+  publicIp: string;
+  internet: boolean;
+  ownerId: number;
 }
+
+import { SerialCommandEnum } from "./";
+
+export type SerialCommandTermInfo = {
+  cmd: SerialCommandEnum.INFO;
+};

@@ -13,7 +13,7 @@ jobs:
     runs-on: ubuntu-latest
     if: github.repository != 'lillithkt/template'
     env:
-        REPO: ${{ github.repository.name }}
+      REPO: ${{ github.repository.name }}
     steps:
       - name: Set up QEMU
         uses: docker/setup-qemu-action@v3.6.0

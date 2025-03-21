@@ -15,10 +15,10 @@ jobs:
         uses: actions/setup-node@v4.2.0
         with:
           node-version: 22.13.1
-          cache: 'pnpm'
+          cache: "pnpm"
       - name: Install Dependencies
         run: pnpm install --frozen-lockfile
-      
+
       - name: Build
         run: pnpm build
       # commented out as unit tests require a physical device
