@@ -1,4 +1,5 @@
 import config from "config";
+import { flags } from "debugcommands";
 import { SerialPort } from "serialport";
 import { SerialCommandEnum, SerialCommands } from "./types";
 import type iTerminalInfo from "./types/terminalinfo";
@@ -52,7 +53,7 @@ async function closeExistingConnections(portPath: string) {
 }
 
 function parseTermInfo() {
-  console.log("TERMINFO found");
+  if (flags.debugLogs) console.log("TERMINFO found");
   const networks = GlobalPort.info!.networks.filter(
     (i) => i.ssid !== "PiShock"
   ); // Stock wifi

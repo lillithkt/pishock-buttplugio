@@ -1,12 +1,14 @@
 import { getInRange } from "buttplug";
 import config from "config";
 import { createInterface } from "readline";
+import { sendCommand } from "serial";
+import { SerialCommandEnum } from "serial/types";
 import { SerialOperateEnum } from "serial/types/operate";
 
 const commands: Record<string, (args: string[]) => void> = {
   help: () => {
-    console.log("Commands:");
-    Object.keys(commands).map((i) => console.log(i));
+    console.log("# Commands:");
+    Object.keys(commands).map((i) => console.log("- " + i));
   },
   dumpconfig: () => {
     console.log(JSON.stringify(config.toJSON()));
@@ -50,8 +52,13 @@ const commands: Record<string, (args: string[]) => void> = {
     config.wifiPass = args[1];
     config.save();
     console.log(
-      "Registered a new wifi network. This will be added when the pishock resets it.",
+      "Registered a new wifi network. This will be added when the pishock resets it."
     );
+  },
+
+  restart: () => {
+    console.log("Restarting PiShock...");
+    sendCommand({ cmd: SerialCommandEnum.RESTART });
   },
 } as const;
 

@@ -23,9 +23,3 @@ export default interface iTerminalInfo {
   internet: boolean;
   ownerId: number;
 }
-
-import { SerialCommandEnum } from "./";
-
-export type SerialCommandTermInfo = {
-  cmd: SerialCommandEnum.INFO;
-};
