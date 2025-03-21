@@ -20,6 +20,7 @@ ENV NODE_ENV=production
 
 WORKDIR /dist
 COPY --from=0 /src/dist/* ./
+COPY --from=0 /src/node_modules ./
 VOLUME [ "/data" ]
 ENV DOCKER=true
 
