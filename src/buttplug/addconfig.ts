@@ -37,8 +37,7 @@ const config = {
 
 export const getIntifaceConfigPath = () =>
   path.join(
-    // process.env.APPDATA ||
-    "%appdata%",
+    process.env.APPDATA || "%appdata%",
     "com.nonpolynomial",
     "intiface_central",
     "config",
